@@ -1,0 +1,36 @@
+/* Styles for the body element */
+body {
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}
+
+/* Styles for the sidebar */
+.sidebar {
+    background-color: #000; /* Black background color */
+    color: #fff; /* Text color */
+    height: 100vh; /* Full height */
+    width: 200px; /* Sidebar width */
+    position: fixed; /* Fixed position */
+    top: 0; /* Align to the top */
+    left: 0; /* Align to the left */
+    padding-top: 60px; /* Adjusted to account for the navbar height */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds sidebar height */
+}
+
+/* Styles for sidebar links */
+.sidebar .nav-link {
+    padding: 10px; /* Add padding around the links */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Add separating lines */
+}
+
+/* Remove line from the last link */
+.sidebar .nav-link:last-child {
+    border-bottom: none;
+}
+
+/* Main content area */
+.main-content {
+    margin-left: 200px; /* Adjust margin to account for sidebar width */
+    padding-top: 60px; /* Adjusted to account for the navbar height */
+    padding-right: 15px; /* Add padding to the right to prevent horizontal scrollbar */
+}
