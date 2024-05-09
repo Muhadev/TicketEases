@@ -1,45 +1,63 @@
-{% extends 'base.html' %}
+    {% extends 'base.html' %}
 
-{% block title %}Dashboard{% endblock %}
+    {% block title %}Dashboard{% endblock %}
 
-{% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <nav class="col-md-2 d-none d-md-block bg-dark sidebar">
-            <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link side-link active" href="#">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link side-link" href="#">Events</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link side-link" href="#">Tickets</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link side-link" href="#">Orders</a>
-                    </li>
-                    <!-- Add more sidebar items as needed -->
-                </ul>
-            </div>
-        </nav>
-
-        <!-- Main content area -->
-        <main role="main" class="col-md-10 ml-sm-auto px-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <h1 class="h2">Dashboard</h1>
-            </div>
-
-            <!-- Your dashboard content goes here -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Welcome to the Dashboard</h2>
-                    <!-- Add more content here -->
+    {% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-2 d-none d-md-block bg-dark sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" id="dashboard-view">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" id="create-event-link">Create Events</a>
+                        </li>
+                        <li class="nav-item ">
+                            <a class="nav-link sidebar-link" id="list-event-link">List Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" href="#">Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" href="#">Tickets</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" href="#">Payments</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" href="#">News</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" href="#">User Profile</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" href="#">Developer settings</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link sidebar-link" href="#">Logout</a>
+                        </li>
+                        <!-- Add more sidebar items as needed -->
+                    </ul>
                 </div>
-            </div>
-        </main>
+            </nav>
+
+            <!-- Main content area -->
+            <main role="main" class="col-md-10 ml-sm-auto px-4 main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Dashboard</h1>
+                </div>
+
+                <!-- Your dashboard content goes here -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Welcome to the Dashboard</h2>
+                        <!-- Add more content here -->
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
-</div>
-{% endblock %}
+    {% endblock %}

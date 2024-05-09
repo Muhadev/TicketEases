@@ -23,6 +23,14 @@ class Event(db.Model):
     # Define relationships
     tickets = db.relationship('Ticket', backref='event', lazy=True, cascade='all, delete-orphan')
 
+class Registration(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
+    event_id = db.Column(db.Integer, db.ForeignKey('event.id', ondelete='CASCADE'), nullable=False)
+
+    def __repr__(self):
+        return f'<Registration {self.id}>'
+
 # Define TicketType model
 class TicketType(db.Model):
     id = db.Column(db.Integer, primary_key=True)

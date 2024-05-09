@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}List of Events{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>List of Events</h1>
+    <div class="row">
+        {% for event in events %}
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.title }}</h5>
+                    <p class="card-text">{{ event.description }}</p>
+                    <p class="card-text">Date: {{ event.date }}</p>
+                    <p class="card-text">Time: {{ event.time }}</p>
+                    <p class="card-text">Venue: {{ event.venue }}</p>
+                    <a href="{{ url_for('dashboard.event_details', event_id=event.id) }}" class="btn btn-primary">View Details</a>
+                    <form action="{{ url_for('dashboard.delete_event', event_id=event.id) }}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
