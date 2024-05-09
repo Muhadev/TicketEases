@@ -83,7 +83,42 @@ body {
     background-position: center;
     color: white;
 }
-
+  .bg-image4 {
+    background-image: url('/static/images/technology.jpg'); /* Replace 'path_to_your_image.jpg' with the path to your image */
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+  .bg-image5 {
+    background-image: url('/static/images/sport.jpg'); /* Replace 'path_to_your_image.jpg' with the path to your image */
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+  .bg-image6 {
+    background-image: url('/static/images/science.jpg'); /* Replace 'path_to_your_image.jpg' with the path to your image */
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+  .bg-image7 {
+    background-image: url('/static/images/agric.jpg'); /* Replace 'path_to_your_image.jpg' with the path to your image */
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+  .bg-image8 {
+    background-image: url('/static/images/startup.jpg'); /* Replace 'path_to_your_image.jpg' with the path to your image */
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+  .bg-image9 {
+    background-image: url('/static/images/event3.jpg'); /* Replace 'path_to_your_image.jpg' with the path to your image */
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
 .info-section {
     background-image: url('/static/images/used.jpg'); /* Replace 'path_to_your_image.jpg' with the path to your image */
     background-size: cover;
