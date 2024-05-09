@@ -5,10 +5,259 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="jumbotron">
-  <h1 class="display-4">Welcome to Your Event E-Ticketing Platform!</h1>
-  <p class="lead">Buy tickets for exciting events and manage your orders easily.</p>
-  <hr class="my-4">
-  <p>Get started by <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}" role="button">Register</a> or <a class="btn btn-primary btn-lg" href="{{ url_for('auth.login') }}" role="button">Login</a></p>
-</div>
+<section class="first d-flex align-items-center justify-content-center mb-4">
+  <div class="jumbotron bg-transparent text-center">
+    <h1 class="display-4 mb-4">Welcome to Your Event E-Ticketing Platform!</h1>
+    <p class="lead mb-4">Buy tickets for exciting events and manage your orders easily.</p>
+    <hr class="my-4 bg-white">
+    <p class="mb-0">Get started by <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}" role="button">Register</a> or <a class="btn btn-primary btn-lg" href="{{ url_for('auth.login') }}" role="button">Login</a></p>
+  </div>
+</section>
+
+<section class="events">
+  <!-- Content goes here -->
+  <div class="container mb-5">
+    <h2 class="mb-5">Upcoming Events</h2>
+    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed hendrerit euismod malesuada. Phasellus vehicula elit vitae ipsum faucibus, nec lacinia risus lobortis. Nullam sit amet quam sit amet risus placerat fermentum.</p>
+    <div class="row">
+      <!-- Event cards -->
+      <div class="col-md-4">
+        <div class="card bg-image1">
+          <div class="card-body">
+            <h5 class="card-title">Event 1</h5>
+            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed hendrerit euismod malesuada. Phasellus vehicula elit vitae ipsum faucibus, nec lacinia risus lobortis. Nullam sit amet quam sit amet risus placerat fermentum.</p>
+            <a href="#" class="btn btn-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-image2">
+          <div class="card-body">
+            <h5 class="card-title">Event 2</h5>
+            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed hendrerit euismod malesuada. Phasellus vehicula elit vitae ipsum faucibus, nec lacinia risus lobortis. Nullam sit amet quam sit amet risus placerat fermentum.</p>
+            <a href="#" class="btn btn-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-image3">
+          <div class="card-body">
+            <h5 class="card-title">Event 3</h5>
+            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed hendrerit euismod malesuada. Phasellus vehicula elit vitae ipsum faucibus, nec lacinia risus lobortis. Nullam sit amet quam sit amet risus placerat fermentum.</p>
+            <a href="#" class="btn btn-primary">Learn More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-5 mb-4">
+    <h2 class="mb-4">Events by Categories</h2>
+    <div class="row">
+      <!-- First row of cards -->
+      <div class="col-md-4">
+        <div class="card bg-image4 mt-5" style="height: 300px;">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <h5 class="card-title text-center">Technology</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-image5 mt-5" style="height: 300px;">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <h5 class="card-title text-center">Sport</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-image6 mt-5" style="height: 300px;">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <h5 class="card-title text-center">Science</h5>
+          </div>
+        </div>
+      </div>
+      <!-- Second row of cards -->
+      <div class="col-md-4">
+        <div class="card bg-image7 mt-5" style="height: 300px;">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <h5 class="card-title text-center">Agriculture</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-image8 mt-5" style="height: 300px;">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <h5 class="card-title text-center">Startup Events</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card bg-image9 mt-5" style="height: 300px;">
+          <div class="card-body d-flex flex-column justify-content-center">
+            <h5 class="card-title text-center">Category 1</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Additional section -->
+<!-- Additional section -->
+<section class="info-section">
+  <div class="container-fluid text-center">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="info-item">
+          <h2 class="text-white display-4 font-weight-bold mb-4">598</h2>
+          <p class="text-white h4">EVENTS ORGANIZED</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="info-item">
+          <h2 class="text-white display-4 font-weight-bold mb-4">16173</h2>
+          <p class="text-white h4">ACTIVE USERS</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="info-item">
+          <h2 class="text-white display-4 font-weight-bold mb-4">136874</h2>
+          <p class="text-white h4">TICKETS SOLD</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="latest-news bg-light py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">Latest News</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card">
+          <img src="static/images/cat.jpg" class="card-img-top" alt="Nike Urban Running Challenge">
+          <div class="card-body">
+            <h5 class="card-title">Nike Urban Running Challenge with Kobe 2023</h5>
+            <p class="card-text">May 2, 2023 | By Alex Maslov</p>
+            <p class="card-text">Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesenlup.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <img src="static/images/business.jpg" class="card-img-top" alt="Second News Image">
+          <div class="card-body">
+            <h5 class="card-title">Second News Title</h5>
+            <p class="card-text">May 5, 2023 | By John Doe</p>
+            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor turpis et fermentum.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card">
+          <img src="static/images/business.jpg" class="card-img-top" alt="Third News Image">
+          <div class="card-body">
+            <h5 class="card-title">Third News Title</h5>
+            <p class="card-text">May 8, 2023 | By Jane Smith</p>
+            <p class="card-text">Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="live-there">
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <h2 class="text-bold text-big">LIVE THERE</h2>
+        <p class="lead text-bold text-big">Book events from anywhere in 191+ countries and get awesome experience</p>
+        <p class="text-bold">Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+        <a href="#" class="play-button"><i class="fas fa-play"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="companies-section bg-light py-5">
+  <div class="container text-center mt-3">
+    <h2 class="mb-4">Companies Who Use Our Platform</h2>
+    <div class="row py-4">
+      <div class="col-md-3">
+        <img src="/static/images/sponsor-1.png" alt="Company 1" class="img-fluid">
+      </div>
+      <div class="col-md-3">
+        <img src="/static/images/sponsor-3.png" alt="Company 2" class="img-fluid">
+      </div>
+      <div class="col-md-3">
+        <img src="/static/images/sponsor-4.png" alt="Company 3" class="img-fluid">
+      </div>
+      <div class="col-md-3">
+        <img src="/static/images/sponsor-2.png" alt="Company 4" class="img-fluid">
+      </div>
+    </div>
+  </div>
+</section>
+<section class="stay-updated-section bg-dark-blue py-5">
+  <div class="container text-center">
+    <h2 class="mb-4">Stay Up to Date With Your Favorite Events!</h2>
+    <p class="lead mb-4">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</p>
+    <form class="form-inline justify-content-center">
+      <div class="form-group mx-sm-3 mb-2">
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input type="email" class="form-control" id="inputEmail" placeholder="Your E-mail address">
+      </div>
+      <button type="submit" class="btn btn-primary mb-2">SUBSCRIBE</button>
+    </form>
+  </div>
+</section>
+<footer class="footer-section bg-black">
+  <div class="container text-white">
+    <div class="row">
+      <div class="col-md-4">
+        <h5>TicketEases</h5>
+        <p>© 2023 TicketEases.COM. ALL RIGHTS RESERVED</p>
+      </div>
+      <div class="col-md-2">
+        <h5>ABOUT</h5>
+        <ul class="list-unstyled">
+          <li>Gallery</li>
+          <li>Register</li>
+          <li>Upcoming</li>
+          <li>Artist Page</li>
+          <li>Blog</li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h5>CONTACT US</h5>
+        <ul class="list-unstyled">
+          <li>Events Search (Legacy)</li>
+          <li>Events</li>
+          <li>Select Tickets Maroon 5</li>
+          <li>Select Ticket Guitar Vibes</li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h5>STAY CONNECTED</h5>
+        <ul class="list-unstyled">
+          <li>Facebook</li>
+          <li>Twitter</li>
+          <li>Linkedin</li>
+          <li>Google</li>
+          <li>Instagram</li>
+        </ul>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-12 text-center">
+        <p>TicketEases DASHBOARD</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <p>Contact us</p>
+        <p>Subscriber Login</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
 {% endblock %}
