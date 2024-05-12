@@ -15,15 +15,12 @@
                     <p class="card-text">Date: {{ event.date }}</p>
                     <p class="card-text">Time: {{ event.time }}</p>
                     <p class="card-text">Venue: {{ event.venue }}</p>
-                    <a href="{{ url_for('dashboard.event_details', event_id=event.id) }}" class="btn btn-primary">View Details</a>
-                    <form action="{{ url_for('dashboard.delete_event', event_id=event.id) }}" method="POST" class="d-inline">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+                    <button class="btn btn-primary view-details-btn" data-event-id="{{ event.id }}">View Details</button>
+                    <button class="btn btn-danger delete-event-btn" data-event-id="{{ event.id }}">Delete</button>
                 </div>
             </div>
         </div>
-        {% endfor %}
+        {% endfor %}  <!-- Closing tag for the 'for' loop -->
     </div>
 </div>
-
 {% endblock %}

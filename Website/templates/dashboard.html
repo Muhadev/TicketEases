@@ -1,63 +1,93 @@
-    {% extends 'base.html' %}
+{% extends 'base.html' %}
 
-    {% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
-    {% block content %}
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav class="col-md-2 d-none d-md-block bg-dark sidebar">
-                <div class="sidebar-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-link" id="dashboard-view">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-link" id="create-event-link">Create Events</a>
-                        </li>
-                        <li class="nav-item ">
-                            <a class="nav-link sidebar-link" id="list-event-link">List Events</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-link" href="#">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-link" href="#">Tickets</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-link" href="#">Payments</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-link" href="#">News</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-link" href="#">User Profile</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-link" href="#">Developer settings</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link sidebar-link" href="#">Logout</a>
-                        </li>
-                        <!-- Add more sidebar items as needed -->
+{% block content %}
+<div class="home">
+    <div class="container-fluid display-table">
+        <div class="row display-table-row">
+            <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
+                <div class="logo">
+                    <a hef="home.html">
+                       TicketEases
+                    </a>
+                </div>
+                <div class="navi">
+                    <ul>
+                        <li class="active"><a href="#"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Home</span></a></li>
+                        <li><a id="create-event-link"><i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Create Event</span></a></li>
+                        <li><a id="list-event-link"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="hidden-xs hidden-sm">List of Event</span></a></li>
+                        <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Tickets</span></a></li>
+                        <li><a href="#"><i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Users</span></a></li>
+                        <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Setting</span></a></li>
+                        <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Logout</span></a></li>
+                        <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Supports</span></a></li>
                     </ul>
                 </div>
-            </nav>
-
-            <!-- Main content area -->
-            <main role="main" class="col-md-10 ml-sm-auto px-4 main-content">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
-                </div>
-
-                <!-- Your dashboard content goes here -->
+            </div>
+            <div class="col-md-10 col-sm-11 display-table-cell v-align">
+                <!--<button type="button" class="slide-toggle">Slide Toggle</button> -->
                 <div class="row">
-                    <div class="col-md-12">
-                        <h2>Welcome to the Dashboard</h2>
-                        <!-- Add more content here -->
+                    <header>
+                        <div class="col-md-7">
+                            <nav class="navbar-default pull-left">
+                                <div class="navbar-header">
+                                    <button type="button" class="navbar-toggle collapsed" data-toggle="offcanvas" data-target="#side-menu" aria-expanded="false">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                </div>
+                            </nav>
+                            <div class="search hidden-xs hidden-sm">
+                                <input type="text" placeholder="Search" id="search">
+                            </div>
+                        </div>
+                    </header>
+                </div>
+                <div class="user-dashboard main-content">
+                    <h1>Hello, Muhadev</h1>
+                    <div class="row">
+                        <div class="col-md-5 col-sm-5 col-xs-12 gutter">
+
+                            <div class="sales">
+                                <h2>Your Sale</h2>
+
+                                <div class="btn-group">
+                                    <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span>Period:</span> Last Year
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="#">2012</a>
+                                        <a href="#">2014</a>
+                                        <a href="#">2015</a>
+                                        <a href="#">2016</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7 col-sm-7 col-xs-12 gutter">
+
+                            <div class="sales report">
+                                <h2>Report</h2>
+                                <div class="btn-group">
+                                    <button class="btn btn-secondary btn-lg dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span>Period:</span> Last Year
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="#">2012</a>
+                                        <a href="#">2014</a>
+                                        <a href="#">2015</a>
+                                        <a href="#">2016</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </main>
+            </div>
         </div>
-    </div>
-    {% endblock %}
+    </div> 
+</div>
+{% endblock %}

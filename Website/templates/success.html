@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container success-bg">
+    <div class="alert alert-success" role="alert">
+        <h4 class="alert-heading">Success!</h4>
+        <p>Your action was successful.</p>
+        <hr>
+        <p class="mb-0">You may <a href="{{ url_for('dashboard.dashboard') }}" class="alert-link">return to the dashboard</a> or continue with other actions.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,37 +1,22 @@
-# # dashboard.py
-
-# from flask import Blueprint, render_template
-# from flask_login import login_required, current_user
-
-# # Create a blueprint for dashboard routes
-# dashboard_bp = Blueprint('dashboard', __name__)
-
-# # Define routes for the dashboard
-# @dashboard_bp.route('/dashboard')
-# @login_required
-# def dashboard():
-#     # Render the dashboard template
-#     return render_template('dashboard.html')
-
-# events.py
+# dashboard.py
 
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from .models import db, Event, User, Registration
 from sqlalchemy.exc import SQLAlchemyError
 from flask_login import login_required, current_user
-# from .dashboard import dashboard_bp
+from flask import jsonify  # Import jsonify for returning JSON responses
+import logging
 
-# Create a blueprint for dashboard routes
-dashboard_bp = Blueprint('dashboard', __name__)
+# Initialize logger
+logger = logging.getLogger(__name__)
 
-# Define routes for the dashboard
+dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
+
 @dashboard_bp.route('/')
 @login_required
 def dashboard():
-    # Render the dashboard template
     return render_template('dashboard.html')
 
-# Add routes for managing and promoting events
 @dashboard_bp.route('/events/create', methods=['GET', 'POST'])
 @login_required
 def create_event():
@@ -50,18 +35,24 @@ def create_event():
             db.session.commit()
             flash('Event created successfully!', 'success')
             # Redirect to the event details page
-            return redirect(url_for('dashboard.event_details', event_id=event.id))
+            return jsonify({'event_id': event.id})
         except SQLAlchemyError as e:
             db.session.rollback()
             flash('An error occurred while creating the event. Please try again later.', 'error')
             return redirect(url_for('dashboard.create_event'))
     return render_template('create_event.html')
 
-@dashboard_bp.route('/events/<int:event_id>')
+@dashboard_bp.route('/events/<int:event_id>/details')
 @login_required
 def event_details(event_id):
     event = Event.query.get_or_404(event_id)
     return render_template('event_details.html', event=event)
+
+# Route for the success page
+@dashboard_bp.route('/success')
+@login_required
+def success():
+    return render_template('success.html')
 
 @dashboard_bp.route('/events/<int:event_id>/edit', methods=['GET', 'POST'])
 @login_required
@@ -77,9 +68,8 @@ def edit_event(event_id):
             event.venue = request.form.get('venue')
             # Commit changes to the database
             db.session.commit()
-            flash('Event updated successfully!', 'success')
-            # Redirect to the event details page
-            return redirect(url_for('dashboard.event_details', event_id=event.id))
+            # Redirect to the success page
+            return redirect(url_for('dashboard.success'))
         except SQLAlchemyError as e:
             db.session.rollback()
             flash('An error occurred while updating the event. Please try again later.', 'error')
@@ -90,12 +80,18 @@ def edit_event(event_id):
 @login_required
 def delete_event(event_id):
     event = Event.query.get_or_404(event_id)
-    db.session.delete(event)
-    db.session.commit()
-    # Redirect to the events listing page
+    try:
+        db.session.delete(event)
+        db.session.commit()
+        flash('Event deleted successfully!', 'success')
+        logger.info(f"Event with ID {event_id} deleted successfully.")
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred while deleting the event. Please try again later.', 'error')
+        logger.error(f"Error deleting event with ID {event_id}: {str(e)}")
     return redirect(url_for('dashboard.list_events'))
 
-@dashboard_bp.route('/events')
+@dashboard_bp.route('/events/list')
 @login_required
 def list_events():
     events = Event.query.all()
