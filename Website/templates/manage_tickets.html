@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Tickets for {{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Manage Tickets for {{ event.title }}</h1>
+    <form id="create-ticket-type-form" method="post" action="{{ url_for('dashboard.manage_tickets', event_id=event.id) }}">
+        <div class="form-group">
+            <label for="name">Ticket Type Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" class="form-control" id="description" name="description">
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+        </div>
+        <div class="form-group">
+            <label for="seating_arrangement">Seating Arrangement</label>
+            <input type="text" class="form-control" id="seating_arrangement" name="seating_arrangement">
+        </div>
+        <button type="submit" class="btn btn-primary">Add Ticket Type</button>
+    </form>
+    <hr>
+    <h2>Existing Ticket Types</h2>
+    <ul class="ticket-types">
+        {% for ticket_type in ticket_types %}
+        <li class="ticket-type">
+            {{ ticket_type.name }} - {{ ticket_type.description }} - ${{ ticket_type.price }} - {{ ticket_type.seating_arrangement }}
+            <form method="post" action="{{ url_for('dashboard.delete_ticket_type', event_id=event.id, ticket_type_id=ticket_type.id) }}" style="display:inline;">
+                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

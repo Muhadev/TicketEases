@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     // Event listener for create event link
     $('#create-event-link').on('click', function () {
         loadCreateEventForm();
@@ -45,9 +46,16 @@ $(document).ready(function () {
         deleteEvent(eventId);
     });
 
+     // Event listen er for manage tickets link
+     $(document).on('click', '.manage-tickets-btn', function (event) {
+        event.preventDefault(); // Prevent default link behavior
+        var eventId = $(this).data('event-id');
+        loadManageTickets(eventId);
+    });
+
     $(document).on('click', '#edit-event-btn', function (event) {
         event.preventDefault(); // Prevent default link behavior
-    
+
         // Fetch the edit event page content from the server
         var eventId = $(this).data('event-id');
         var url = '/dashboard/events/' + eventId + '/edit'; // Check if eventId is properly defined here
@@ -58,7 +66,7 @@ $(document).ready(function () {
                 $('.user-dashboard.main-content').html(html);
             })
             .catch(error => console.error('Error:', error));
-    });
+    }); 
 
     // Event listener for submitting the edit event form
     $(document).on('submit', '#edit-event-form', function (event) {
@@ -83,7 +91,7 @@ $(document).ready(function () {
             }
         });
     });
-    
+
     // Function to load the success page
     function loadSuccessPage() {
         $.get('/dashboard/success', function (data) {
@@ -116,6 +124,19 @@ $(document).ready(function () {
             .catch(error => console.error('Error:', error));
     }
 
+    // Function to load manage tickets page
+    function loadManageTickets(eventId) {
+        var url = '/dashboard/events/' + eventId + '/tickets';
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                $('.user-dashboard.main-content').html(html);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+    // Event listener for manage tickets link
+
+
     // Function to load list of events
     function loadListEvents() {
         // Example: load the list of events
@@ -127,8 +148,10 @@ $(document).ready(function () {
             })
             .catch(error => console.error('Error:', error));
     }
+
     // Function to delete an event
     function deleteEvent(eventId) {
+        console.log('Deleting event with ID:', eventId); // Debugging statement
         // Send an AJAX POST request to delete the event
         $.ajax({
             url: '/dashboard/events/' + eventId + '/delete',
@@ -137,10 +160,12 @@ $(document).ready(function () {
                 // Reload the list of events after successful deletion
                 loadListEvents();
             },
-            error: function () {
-                // Handle any errors if the request fails
-                alert('An error occurred while deleting the event. Please try again later.');
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.responseText; // Get the specific error message from the response
+                alert('An error occurred while deleting the event: ' + errorMessage); // Display the error message
             }
-        });
+        }); 
     }
+    // Fetch and load list of events when the page loads
+    // loadListEvents();
 });

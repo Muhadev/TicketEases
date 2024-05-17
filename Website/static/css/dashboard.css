@@ -72,15 +72,15 @@ li,ul{
     text-align: center;
 }
 
-/* .create-event {
-    background: #5584ff none repeat scroll 0 0;
-    border-radius: 100px;
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 600;
-    padding: 10px 27px 10px 45px;
-    position: relative;
-} */
+.ticket-types {
+    margin-top: 20px; /* Adjust this value as needed */
+}
+
+.ticket-type {
+    margin-bottom: 20px; /* Adjust this value as needed */
+    padding: 10px; /* Optional: Add padding for better spacing */
+    border: 1px solid #ccc; /* Optional: Add border for better visual separation */
+}
 
 .header-rightside .nav > li > a:focus,
 .header-rightside .nav > li > a:hover {
