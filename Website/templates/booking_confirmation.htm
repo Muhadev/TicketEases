@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking Confirmation{% endblock %}
+
+{% block content %}
+<div class="booking-confirmation">
+    <h2>Booking Confirmation</h2>
+    <p>Thank you for booking your ticket!</p>
+    <p><strong>Event:</strong> {{ ticket.event.title }}</p>
+    <p><strong>Ticket Type:</strong> {{ ticket.ticket_type.name }}</p>
+    <p><strong>Quantity:</strong> 1</p> <!-- Adjust this if displaying more than one ticket -->
+    <p><strong>Booking ID:</strong> {{ ticket.id }}</p>
+    <p>Please save this information. An email with the booking details has been sent to you.</p>
+    <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+</div>
+{% endblock %}

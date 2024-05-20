@@ -13,7 +13,7 @@ def login():
         email = request.form['email']
         password = request.form['password']
         user = User.query.filter_by(email=email).first()
-        if user and bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+        if user and user.check_password(password):
             login_user(user)
             flash('Logged in successfully.', 'success')
             return redirect(url_for('dashboard.dashboard'))
@@ -37,14 +37,15 @@ def register():
             flash('Email address already exists.', 'error')
             return redirect(url_for('auth.register'))
 
-        # Hash the password
-        hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        # Create a new user instance
+        new_user = User(username=username, email=email)
+        new_user.set_password(password)
 
-        
-        # Store the hashed password
-        new_user = User(username=username, email=email, password=hashed_password)
+        # Add the new user to the database
         db.session.add(new_user)
         db.session.commit()
+
+        login_user(new_user)
         flash('Account created successfully. Please log in.', 'success')
         return redirect(url_for('dashboard.dashboard'))
 
@@ -55,4 +56,4 @@ def register():
 def logout():
     logout_user()
     flash('Logged out successfully.', 'success')
-    return redirect(url_for('home.html'))  # Assuming 'index' is the name of your home page route
+    return redirect(url_for('home'))  # Assuming 'home' is the name of your home page route

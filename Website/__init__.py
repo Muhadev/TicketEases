@@ -18,7 +18,7 @@ def create_app():
     app.config['SECRET_KEY'] = 'your_secret_key_here'  # Change this to a random secret key
 
     # Configure MySQL database
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:muhammed@localhost/EaseTicket'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://muhadev:muhammed@localhost/ticketease'
 
     # Suppress deprecation warning
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -51,6 +51,10 @@ def create_app():
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))
+    
+
+    login_manager.login_view = 'auth.login'
+    login_manager.login_message_category = 'info'
 
 
     return app

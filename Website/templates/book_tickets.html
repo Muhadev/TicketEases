@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Book Tickets{% endblock %}
+
+{% block content %}
+<div class="book-ticket">
+    <h2>Book Ticket</h2>
+    <form id="book-ticket-form" method="POST">
+        <div class="form-group">
+            <label for="event">Select Event:</label>
+            <select class="form-control" id="event" name="event" required>
+                <option value="" selected disabled>-- Select Event --</option>
+                {% for event in events %}
+                    <option value="{{ event.id }}">{{ event.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="ticket-type">Select Ticket Type:</label>
+            <select class="form-control" id="ticket-type" name="ticket_type" required>
+                <option value="" selected disabled>-- Select Ticket Type --</option>
+                {% for ticket_type in ticket_types %}
+                    <option value="{{ ticket_type.id }}">{{ ticket_type.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <input type="number" class="form-control" id="quantity" name="quantity" min="1" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Book Ticket</button>
+    </form>
+    <div id="booking-message" class="mt-3" style="display: none;"></div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Ticket Types{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Ticket Types</h1>
+    <ul class="ticket-types">
+        {% for ticket_type in ticket_types %}
+        <li class="ticket-type">
+            <h3>{{ ticket_type.name }}</h3>
+            <p><strong>Description:</strong> {{ ticket_type.description }}</p>
+            <p><strong>Price:</strong> ${{ ticket_type.price }}</p>
+            <p><strong>Available Tickets:</strong> {{ ticket_type.available_tickets }}</p>
+            <form method="post" action="{{ url_for('dashboard.delete_ticket_type', event_id=event.id, ticket_type_id=ticket_type.id) }}">
+                <button type="submit" class="delete-ticket-btn btn btn-danger">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
