@@ -8,20 +8,20 @@
         <div class="row display-table-row">
             <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
                 <div class="logo">
-                    <a hef="home.html">
+                    <a href="{{ url_for('home.home') }}">
                        TicketEases
                     </a>
                 </div>
                 <div class="navi">
                     <ul>
-                        <li class="active"><a href="/home"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Home</span></a></li>
+                        <li class="active"><a href="{{ url_for('home.home') }}"><i class="fa fa-home" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Home</span></a></li>
                         <li><a id="create-event-link"><i class="fa fa-tasks" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Create Event</span></a></li>
                         <li><a id="list-event-link"><i class="fa fa-bar-chart" aria-hidden="true"></i><span class="hidden-xs hidden-sm">List of Event</span></a></li>
                         <li><a id="book-event-link"><i class="fa fa-user" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Book Event</span></a></li>
                         <li><a id="list-ticket-link"><i class="fa fa-calendar" aria-hidden="true"></i><span class="hidden-xs hidden-sm">List of Tickets</span></a></li>
-                        <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Setting</span></a></li>
-                        <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Logout</span></a></li>
-                        <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Supports</span></a></li>
+                        <li><a href="{{ url_for('auth.logout') }}"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Logout</span></a></li>
+                        <!-- <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Logout</span></a></li>
+                        <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span class="hidden-xs hidden-sm">Supports</span></a></li> -->
                     </ul>
                 </div>
             </div>
@@ -32,12 +32,6 @@
                         <div class="col-md-7">
                             <nav class="navbar-default pull-left">
                                 <div class="navbar-header">
-                                    <button type="button" class="navbar-toggle collapsed" data-toggle="offcanvas" data-target="#side-menu" aria-expanded="false">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                    </button>
                                 </div>
                             </nav>
                             <div class="search hidden-xs hidden-sm">

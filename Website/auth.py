@@ -56,4 +56,4 @@ def register():
 def logout():
     logout_user()
     flash('Logged out successfully.', 'success')
-    return redirect(url_for('home'))  # Assuming 'home' is the name of your home page route
+    return redirect(url_for('home.home'))  # Assuming 'home' is the name of your home page route

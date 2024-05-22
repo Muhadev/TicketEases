@@ -150,8 +150,8 @@ def book_tickets():
 @login_required
 def booking_confirmation(booking_id):
     ticket = Ticket.query.get_or_404(booking_id)
-    return render_template('booking_confirmation.html', ticket=ticket)
-
+    quantity = Ticket.query.filter_by(user_id=current_user.id, event_id=ticket.event_id).count()
+    return render_template('booking_confirmation.html', ticket=ticket, quantity=quantity)
 
 @dashboard_bp.route('/ticket_types/<int:event_id>')
 @login_required

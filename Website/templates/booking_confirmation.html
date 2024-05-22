@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Booking Confirmation{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card booking-confirmation">
+        <div class="card-header text-center">
+            <h2>Booking Confirmation</h2>
+        </div>
+        <div class="card-body">
+            <p class="lead">Thank you for booking your ticket!</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Event:</strong> {{ ticket.event.title }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Date:</strong> {{ ticket.event.date.strftime('%B %d, %Y') }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Time:</strong> {{ ticket.event.time.strftime('%I:%M %p') }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Venue:</strong> {{ ticket.event.venue }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Ticket Type:</strong> {{ ticket.ticket_type.name }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Price:</strong> ${{ ticket.ticket_type.price }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Quantity:</strong> {{ quantity }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Total Price:</strong> ${{ ticket.ticket_type.price * quantity }}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <p><strong>Booking ID:</strong> {{ ticket.id }}</p>
+                </div>
+            </div>
+            <p class="mt-3">Please save this information. An email with the booking details has been sent to you.</p>
+            <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

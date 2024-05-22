@@ -27,59 +27,69 @@
         // }
 
         // Event listener for booking event link
-        $('#book-event-link').on('click', function (event) {
-            loadBookEventForm();
-        });
-    
-        function loadBookEventForm() {
-            var url = '/dashboard/events/book/form';
-            fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    $('.user-dashboard.main-content').html(html);
-                    initializeBookEventForm();
-                })
-                .catch(error => console.error('Error:', error));
-        }
-    
-        function initializeBookEventForm() {
-            $('#event').change(async function () {
-                var eventId = $(this).val();
-                if (eventId) {
-                    try {
-                        const response = await fetch(`/dashboard/ticket_types/${eventId}`);
-                        const data = await response.json();
-                        const ticketTypeSelect = $('#ticket-type');
-                        ticketTypeSelect.empty();
-                        ticketTypeSelect.append('<option value="">Select Ticket Type</option>');
-                        data.forEach(ticketType => {
-                            ticketTypeSelect.append(`<option value="${ticketType.id}">${ticketType.name} - ${ticketType.available_tickets} tickets available</option>`);
-                        });
-                    } catch (error) {
-                        console.error('Error fetching ticket types:', error);
-                    }
-                }
-            });
-    
-            $('#book-ticket-form').on('submit', async function (e) {
-                e.preventDefault();
-                const formData = new FormData(this);
+    $('#book-event-link').on('click', function () {
+        loadBookEventForm();
+    });
+
+    function loadBookEventForm() {
+        var url = '/dashboard/events/book/form';
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                $('.user-dashboard.main-content').html(html);
+                initializeBookEventForm();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function initializeBookEventForm() {
+        $('#event').change(async function () {
+            var eventId = $(this).val();
+            if (eventId) {
                 try {
-                    const response = await fetch('/dashboard/events/book', {
-                        method: 'POST',
-                        body: formData
+                    const response = await fetch(`/dashboard/ticket_types/${eventId}`);
+                    const data = await response.json();
+                    const ticketTypeSelect = $('#ticket-type');
+                    ticketTypeSelect.empty();
+                    ticketTypeSelect.append('<option value="">Select Ticket Type</option>');
+                    data.forEach(ticketType => {
+                        ticketTypeSelect.append(`<option value="${ticketType.id}">${ticketType.name} - ${ticketType.available_tickets} tickets available</option>`);
                     });
-                    const result = await response.json();
-                    if (response.ok) {
-                        window.location.href = `/dashboard/booking/confirmation/${result.booking_id}`; // Redirect to the confirmation page
-                    } else {
-                        alert('Error booking tickets: ' + result.error);
-                    }
                 } catch (error) {
-                    console.error('Error booking tickets:', error);
+                    console.error('Error fetching ticket types:', error);
                 }
-            });
-        }
+            }
+        });
+
+        $('#book-ticket-form').on('submit', async function (e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            try {
+                const response = await fetch('/dashboard/events/book', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    loadBookingConfirmation(result.booking_id);
+                } else {
+                    alert('Error booking tickets: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error booking tickets:', error);
+            }
+        });
+    }
+
+    function loadBookingConfirmation(bookingId) {
+        var url = `/dashboard/booking/confirmation/${bookingId}`;
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                $('.user-dashboard.main-content').html(html);
+            })
+            .catch(error => console.error('Error:', error));
+    }
         
 
         // Event listener for submitting the create event form

@@ -11,6 +11,10 @@ body {
     top: 0;
 }
 
+.register-container {
+  margin-top: 30px; /* Adjust the value as needed */
+}
+
 .first {
   background-image: url('/static/images/archieved.jpg');
   color: #ffffff;

@@ -1,7 +1,3 @@
-/*Main CSS*/
-
-
-/*Login Signup Page*/
 a:focus,a:hover,a{
     outline:none;
     text-decoration: none;
@@ -21,14 +17,38 @@ li,ul{
     width: 100%;
 }
 
+/* Ensure the sidebar is fixed */
 #navigation {
     background: #0e1a35;
+    position: fixed;
+    height: 100%;
+    width: 500px; /* Adjusted width */
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    /* Add scroll to sidebar if content exceeds viewport */
 }
 
-#navigation {
-    padding: 0;
+/* Fix the header */
+header {
+    background: #ffffff;
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.04);
+    padding: 15px;
+    width: calc(100% - 250px); /* Subtract the sidebar width */
+    position: fixed;
+    top: 0;
+    left: 215px; /* Match the sidebar width */
+    z-index: 1001;
 }
 
+/* Adjust the main content to account for the fixed sidebar and header */
+.main-content {
+    margin-left: 10px; /* This should match the width of the sidebar */
+    margin-top: 100px; /* Adjust based on the height of the header */
+    height: 100vh; /* Subtract the header height */
+     /* Enable vertical scrolling */
+    background: #f6f7fa;
+}
 .display-table {
     display: table;
     padding: 0;
@@ -88,20 +108,6 @@ li,ul{
     text-decoration: none;
 }
 
-.create-event::before {
-    background: rgba(0, 0, 0, 0) url("../images/plus.png") no-repeat scroll 0 0;
-    content: "";
-    ;
-    height: 12px;
-    left: 17px;
-    position: absolute;
-    top: 12px;
-    width: 12px;
-}
-
-.add-project:hover {
-    color: #ffffff;
-}
 
 .header-top i {
     color: #0e1a35;
@@ -347,6 +353,16 @@ header {
     
 }
 @media only screen and (max-device-width: 767px) {
+
+    #navigation {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
     
     .tab-content .tab-pane {
         padding: 20px 0;

@@ -1,8 +1,7 @@
-from . import db  # Import db object from your SQLAlchemy setup
-# models.py
 from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from . import db  # Import db object from your SQLAlchemy setup
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -33,6 +32,7 @@ class Event(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     ticket_types = db.relationship('TicketType', backref='event', lazy=True, cascade="all, delete-orphan")
+    tickets = db.relationship('Ticket', backref='event', lazy=True, cascade="all, delete-orphan")
 
 class TicketType(db.Model):
     __tablename__ = 'ticket_types'
