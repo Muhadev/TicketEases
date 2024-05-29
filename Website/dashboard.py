@@ -1,8 +1,7 @@
-# dashboard.py
-
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from .models import db, Event, User, Registration, TicketType, Ticket, Order, Payment
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+from .token_utils import generate_confirmation_token  # Add this import statement
 from sqlalchemy.orm.exc import FlushError
 from flask_login import login_required, current_user
 import logging
@@ -16,7 +15,11 @@ dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
 @dashboard_bp.route('/')
 @login_required
 def dashboard():
+    if not current_user.confirmed:
+        token = generate_confirmation_token(current_user.email)  # Generate confirmation token
+        return redirect(url_for("auth.confirm_email", token=token))  # Pass the token as a parameter
     return render_template('dashboard.html')
+
 
 @dashboard_bp.route('/events/create', methods=['GET', 'POST'])
 @login_required
@@ -202,6 +205,7 @@ def manage_tickets(event_id):
 
     ticket_types = TicketType.query.filter_by(event_id=event.id).all()
     return render_template('manage_tickets.html', event=event, ticket_types=ticket_types)
+
 
 @dashboard_bp.route('/events/<int:event_id>/tickets/<int:ticket_type_id>/delete', methods=['POST'])
 @login_required

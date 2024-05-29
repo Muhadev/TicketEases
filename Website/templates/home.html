@@ -47,7 +47,10 @@
           <h1 class="display-4 mb-4">Welcome to Your Event E-Ticketing Platform!</h1>
           <p class="lead mb-4">Buy tickets for exciting events and manage your orders easily.</p>
           <hr class="my-4 bg-white">
-          <p class="mb-0">Get started by <a class="btn btn-primary btn-lg" href="{{ url_for('auth.register') }}" role="button">Register</a> or <a class="btn btn-primary btn-lg" href="{{ url_for('auth.login') }}" role="button">Login</a></p>
+          <p class="mb-0">
+            Get started by <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg" role="button">Register</a> 
+            or <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg" role="button">Login</a>
+          </p>
       </div>
   </div>
 </section>

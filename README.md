@@ -13,7 +13,7 @@
 ## Introduction
 The Event E-Ticketing Software is a web-based application that allows users to browse, book, and manage tickets for various events. It is built using Python with the Flask framework for the backend, and utilizes HTML, CSS, JavaScript, and Bootstrap for the frontend. MySQL is used for the database to store user and event information.
 
-## Features
+## Features 
 - User registration and authentication
 - Event browsing and searching
 - Ticket booking and cancellation

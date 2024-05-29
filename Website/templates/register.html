@@ -44,22 +44,31 @@
             <div class="card">
                 <div class="card-header">Register</div>
                 <div class="card-body">
-                <form action="{{ url_for('auth.register') }}" method="post">
-                    <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" class="form-control" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Register</button>
-                </form>
-            </div>
+                    <form id="registerForm" method="post" action="/register" class="needs-validation" novalidate>
+                        {{ form.hidden_tag() }}
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            {{ form.username(class="form-control", id="username") }}
+                            <div id="username-error" class="invalid-feedback">{{ form.username.errors[0] if form.username.errors else '' }}</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            {{ form.email(class="form-control", id="email") }}
+                            <div id="email-error" class="invalid-feedback">{{ form.email.errors[0] if form.email.errors else '' }}</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            {{ form.password(class="form-control", id="password") }}
+                            <div id="password-error" class="invalid-feedback">{{ form.password.errors[0] if form.password.errors else '' }}</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">Confirm Password</label>
+                            {{ form.confirm_password(class="form-control", id="confirm-password") }}
+                            <div id="confirm-password-error" class="invalid-feedback">{{ form.confirm_password.errors[0] if form.confirm_password.errors else '' }}</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
