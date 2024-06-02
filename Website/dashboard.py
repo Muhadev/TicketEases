@@ -5,6 +5,7 @@ from .token_utils import generate_confirmation_token  # Add this import statemen
 from sqlalchemy.orm.exc import FlushError
 from flask_login import login_required, current_user
 import logging
+from .forms import EventForm
 
 # Configure logging
 logging.basicConfig(filename='dashboard.log', level=logging.INFO)
@@ -24,16 +25,14 @@ def dashboard():
 @dashboard_bp.route('/events/create', methods=['GET', 'POST'])
 @login_required
 def create_event():
-    if request.method == 'POST':
-        title = request.form.get('title')
-        description = request.form.get('description')
-        date = request.form.get('date')
-        time = request.form.get('time')
-        venue = request.form.get('venue')
-
-        if not title or not date or not time or not venue:
-            flash('Title, Date, Time, and Venue are required.', 'error')
-            return redirect(url_for('dashboard.create_event'))
+    form = EventForm()  # Instantiate your EventForm
+    
+    if form.validate_on_submit():  # Server-side validation using Flask-WTF
+        title = form.title.data
+        description = form.description.data
+        date = form.date.data
+        time = form.time.data
+        venue = form.venue.data
 
         try:
             event = Event(title=title, description=description, date=date, time=time, venue=venue)
@@ -42,13 +41,14 @@ def create_event():
             logger.info(f'Event created: {event.title}')
             flash('Event created successfully!', 'success')
             return jsonify({'event_id': event.id})
-        except SQLAlchemyError as e:
+        except Exception as e:
             db.session.rollback()
             logger.error(f'Error creating event: {str(e)}')
             flash('An error occurred while creating the event. Please try again later.', 'error')
             return redirect(url_for('dashboard.create_event'))
 
-    return render_template('create_event.html')
+    # If the request method is GET or form validation fails, render the template with the form
+    return render_template('create_event.html', form=form)
 
 @dashboard_bp.route('/events/<int:event_id>/details')
 @login_required
@@ -65,34 +65,21 @@ def success():
 @login_required
 def edit_event(event_id):
     event = Event.query.get_or_404(event_id)
-    if request.method == 'POST':
-        title = request.form.get('title')
-        description = request.form.get('description')
-        date = request.form.get('date')
-        time = request.form.get('time')
-        venue = request.form.get('venue')
-
-        if not title or not date or not time or not venue:
-            flash('Title, Date, Time, and Venue are required.', 'error')
-            return redirect(url_for('dashboard.edit_event', event_id=event.id))
-
+    form = EventForm(obj=event)  # Pass the event object to prepopulate the form
+    
+    if form.validate_on_submit():
+        form.populate_obj(event)  # Update the event object with form data
         try:
-            event.title = title
-            event.description = description
-            event.date = date
-            event.time = time
-            event.venue = venue
             db.session.commit()
             logger.info(f'Event updated: {event.title}')
             flash('Event updated successfully!', 'success')
             return redirect(url_for('dashboard.success'))
-        except SQLAlchemyError as e:
+        except Exception as e:
             db.session.rollback()
             logger.error(f'Error updating event: {str(e)}')
             flash('An error occurred while updating the event. Please try again later.', 'error')
-            return redirect(url_for('dashboard.edit_event', event_id=event.id))
 
-    return render_template('edit_event.html', event=event)
+    return render_template('edit_event.html', event=event, form=form)
 
 @dashboard_bp.route('/events/<int:event_id>/delete', methods=['POST'])
 @login_required

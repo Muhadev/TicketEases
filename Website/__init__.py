@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_mail import Mail
+from flask_wtf.csrf import CSRFProtect
 
 # Load environment variables from .env file
 load_dotenv()
@@ -14,12 +15,14 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
 mail = Mail()
+csrf = CSRFProtect()
 
 def create_app():
     app = Flask(__name__)
 
     # Set Flask configuration from environment variables
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+    app.config['WTF_CSRF_ENABLED'] = os.getenv('WTF_CSRF_ENABLED', 'true').lower() == 'true'  # Add CSRF config
     app.config['SECURITY_PASSWORD_SALT'] = os.getenv('SECURITY_PASSWORD_SALT')
     app.config['SQLALCHEMY_DATABASE_URI'] = (
         f"mysql://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}"
@@ -39,6 +42,8 @@ def create_app():
     login_manager.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
+    # Initialize CSRF protection
+    csrf = CSRFProtect(app)
 
     # Import blueprints
     from .auth import auth_bp

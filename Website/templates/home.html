@@ -14,11 +14,6 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                {% if current_user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link sidebar-link" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
-                </li>
-                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="#">FAQs</a>
                 </li>
@@ -28,10 +23,21 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Contact</a>
                 </li>
-                <div class="navbar-nav">
+                {% if current_user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link sidebar-link" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
                     <a href="{{ url_for('auth.login') }}" class="btn btn-primary mr-2">Login</a>
+                </li>
+                <li class="nav-item">
                     <a href="{{ url_for('auth.register') }}" class="btn btn-success">Register</a>
-                </div>
+                </li>
+                {% endif %}
             </ul>
         </div>
     </div>
@@ -48,8 +54,16 @@
           <p class="lead mb-4">Buy tickets for exciting events and manage your orders easily.</p>
           <hr class="my-4 bg-white">
           <p class="mb-0">
-            Get started by <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg" role="button">Register</a> 
-            or <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg" role="button">Login</a>
+            {% if current_user.is_authenticated %}
+                {% if current_user.confirmed %}
+                Welcome back, {{ current_user.username }}! Go to your <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-primary btn-lg" role="button">Dashboard</a>
+                {% else %}
+                Your email is not verified. Please check your email for verification instructions.
+                {% endif %}
+            {% else %}
+                Get started by <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg" role="button">Register</a> 
+                or <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg" role="button">Login</a>
+            {% endif %}
           </p>
       </div>
   </div>
@@ -142,7 +156,6 @@
   </div>
 </section>
 
-<!-- Additional section -->
 <!-- Additional section -->
 <section class="info-section">
   <div class="container-fluid text-center">

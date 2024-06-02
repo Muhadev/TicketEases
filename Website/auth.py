@@ -1,15 +1,16 @@
 import re
 import logging
-from flask import Blueprint, jsonify, request, redirect, current_app, url_for, render_template, flash
+from flask import Blueprint, jsonify, request, redirect, current_app, url_for, render_template, flash, abort
 from flask_login import login_user, logout_user, login_required, current_user
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message
 from .models import User
 from . import db, mail
 from .email import send_email
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 from .token_utils import generate_confirmation_token, confirm_token
 from datetime import datetime, timedelta
+from functools import wraps
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -21,29 +22,39 @@ mail = Mail()
 def create_response(message, status='success', code=200):
     return jsonify({'message': message, 'status': status}), code
 
+def role_required(role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if not current_user.is_authenticated or current_user.role != role:
+                return abort(403)  # Forbidden
+            return f(*args, **kwargs)
+        return decorated_function
+    return decorator
+
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+    form = LoginForm()
     if request.method == 'POST':
-        try:
-            data = request.form
-            email = data.get('email')
-            password = data.get('password')
-
-            if not email or not password:
-                return create_response('All fields are required.', 'error', 400)
-
+        if form.validate_on_submit():
+            email = form.email.data
+            password = form.password.data
+            
             user = User.query.filter_by(email=email).first()
-
-            if user and user.check_password(password):
-                login_user(user)
-                return create_response('Logged in successfully.')
+            if user:
+                if user.check_password(password):
+                    if user.confirmed:
+                        login_user(user)
+                        return redirect(url_for('dashboard.dashboard'))
+                    else:
+                        flash('Please verify your email before logging in.', 'danger')
+                else:
+                    flash('Invalid email or password.', 'danger')
             else:
-                return create_response('Invalid email or password.', 'error', 401)
-        except Exception as e:
-            logging.exception("An error occurred during login: %s", str(e))
-            return create_response('An error occurred.', 'error', 500)
-
-    return render_template('login.html')
+                flash('Invalid email or password.', 'danger')
+        else:
+            flash('Form did not validate.', 'danger')
+    return render_template('login.html', form=form)
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
@@ -61,17 +72,19 @@ def register():
         if not re.match(PASSWORD_REGEX, password):
             flash('Password must be at least 8 characters long and include both letters and numbers.', 'error')
             return render_template('register.html', form=form)
-
+        
         # Check if email already exists
         if User.query.filter_by(email=email).first():
             flash('Email address already exists.', 'error')
             return render_template('register.html', form=form)
 
         # Create and add user to the database
-        new_user = User(username=username, email=email, password=password, confirmed=False)
-        # new_user.set_password(password)
+        new_user = User(username=username, email=email, password=password, role='user', confirmed=False)
         db.session.add(new_user)
         db.session.commit()
+
+        # Print hashed password
+        print(f"Registered user {email} with hash {new_user.password_hash}")
 
         # Generate confirmation token and send confirmation email
         token = generate_confirmation_token(email)
@@ -88,24 +101,28 @@ def register():
 
     return render_template('register.html', form=form)
 
+@auth_bp.route('/unconfirmed')
+@login_required
+def unconfirmed():
+    if current_user.confirmed:
+        return redirect(url_for('dashboard.dashboard'))
+    flash('Please confirm your account!', 'warning')
+    return render_template('unconfirmed.html')
 
-@auth_bp.route('/test_email')
-def test_email():
-    try:
-        msg = Message('Test Email', sender=current_app.config['MAIL_DEFAULT_SENDER'], recipients=['your_email@example.com'])
-        msg.body = 'This is a test email.'
-        mail.send(msg)
-        return 'Email sent successfully'
-    except Exception as e:
-        logging.exception("An error occurred while sending the test email.")
-        return str(e)
+@auth_bp.route('/confirmed')
+def confirmed():
+    return render_template('confirmed.html')
 
 @auth_bp.route('/confirm_email/<token>', methods=['GET'])
 def confirm_email(token):
     try:
         email = confirm_token(token)
-    except:
-        flash('The confirmation link is invalid or has expired.', 'danger')
+    except SignatureExpired:
+        flash('The confirmation link has expired.', 'danger')
+        return redirect(url_for('auth.resend_confirmation'))
+    except BadSignature:
+        flash('The confirmation link is invalid.', 'danger')
+        return redirect(url_for('auth.resend_confirmation'))
 
     user = User.query.filter_by(email=email).first_or_404()
 
@@ -118,7 +135,7 @@ def confirm_email(token):
         db.session.commit()
         flash('You have confirmed your account. Thank you!', 'success')
 
-    return redirect(url_for('dashboard.dashboard'))
+    return redirect(url_for('auth.confirmed'))
 
 @auth_bp.route('/confirm/resend')
 @login_required
@@ -130,7 +147,7 @@ def resend_confirmation():
         flash('The maximum number of confirmation attempts has been reached.', 'warning') 
     else:
         token = generate_confirmation_token(current_user.email)
-        confirm_url = url_for('confirm_email', token=token, _external=True)
+        confirm_url = url_for('auth.confirm_email', token=token, _external=True)
 
         html = render_template('confirm_email.html', confirm_url=confirm_url)
         subject = "Please confirm your email"
@@ -141,7 +158,7 @@ def resend_confirmation():
 
         flash('A new confirmation link has been sent to your email address.', 'info')
 
-    return redirect(url_for('unconfirmed'))
+    return redirect(url_for('auth.unconfirmed'))
 
 @auth_bp.route('/reset_password_request', methods=['POST'])
 def reset_password_request():
@@ -151,7 +168,7 @@ def reset_password_request():
         user = User.query.filter_by(email=email).first()
 
         if user:
-            serializer = get_serializer()
+            serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
             token = serializer.dumps(email, salt='password-reset')
             reset_link = url_for('auth.reset_password', token=token, _external=True, _scheme='https')
             email_html = render_template('password_reset.html', reset_link=reset_link)
@@ -168,7 +185,7 @@ def reset_password_request():
 def reset_password(token):
     try:
         if request.method == 'POST':
-            serializer = get_serializer()
+            serializer = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
             email = serializer.loads(token, salt='password-reset', max_age=3600)
             data = request.get_json()
             password = data.get('password')
@@ -216,7 +233,21 @@ def profile():
 def logout():
     try:
         logout_user()
-        return create_response('Logged out successfully.')
+        return redirect(url_for('home.home'))
     except Exception as e:
         logging.exception("An error occurred during logout: %s", str(e))
         return create_response('An error occurred.', 'error', 500)
+
+# Example of a protected route that requires admin role
+@auth_bp.route('/admin_dashboard')
+@login_required
+@role_required('admin')
+def admin_dashboard():
+    return render_template('admin_dashboard.html')
+
+# Example of a protected route that requires user role
+@auth_bp.route('/user_dashboard')
+@login_required
+@role_required('user')
+def user_dashboard():
+    return render_template('user_dashboard.html')

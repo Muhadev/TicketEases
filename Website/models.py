@@ -9,25 +9,28 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False, index=True)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
-    password_hash = db.Column(db.String(128), nullable=False)
-    registered_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)  # Set default value to current datetime
+    password_hash = db.Column(db.String(256), nullable=False)
+    registered_on = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     admin = db.Column(db.Boolean, nullable=False, default=False)
+    role = db.Column(db.String(50), nullable=False, default='user')
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     confirmed_on = db.Column(db.DateTime, nullable=True)
+    confirm_attempts = db.Column(db.Integer, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    def __init__(self, username, email, password, confirmed=False, admin=False, confirmed_on=None):
+    def __init__(self, username, email, password, role='user', confirmed=False, admin=False, confirmed_on=None):
         self.username = username
         self.email = email
         self.set_password(password)
+        self.role = role
         self.admin = admin
         self.confirmed = confirmed
         self.confirmed_on = confirmed_on
-    
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-
+    
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 

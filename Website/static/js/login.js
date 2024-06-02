@@ -1,32 +1,60 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('login-form');
-    
-    form.addEventListener('submit', async function(event) {
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('loginForm');
+
+    form.addEventListener('submit', function (event) {
         event.preventDefault();
+        event.stopPropagation();
 
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        let isValid = true;
 
-        try {
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        // Clear previous error messages
+        clearError(email);
+        clearError(password);
 
-            const result = await response.json();
+        // Validate Email
+        if (!email.value) {
+            isValid = false;
+            setError(email, 'Email is required.');
+        } else if (!validateEmail(email.value)) {
+            isValid = false;
+            setError(email, 'Invalid email format.');
+        }
 
-            if (response.ok) {
-                alert(result.message);
-                window.location.href = "/dashboard";  // Update this to match your actual dashboard route
-            } else {
-                alert(result.message);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('An error occurred while logging in. Please try again.');
+        // Validate Password
+        if (!password.value) {
+            isValid = false;
+            setError(password, 'Password is required.');
+        } else if (password.value.length < 8) {
+            isValid = false;
+            setError(password, 'Password must be at least 8 characters long.');
+        }
+
+        if (isValid) {
+            form.classList.add('was-validated');
+            form.submit();
+        } else {
+            form.classList.add('was-validated');
         }
     });
+
+    function setError(element, message) {
+        const errorElement = document.createElement('div');
+        errorElement.className = 'invalid-feedback';
+        errorElement.innerText = message;
+        element.classList.add('is-invalid');
+        element.parentNode.appendChild(errorElement);
+    }
+
+    function clearError(element) {
+        const errorElements = element.parentNode.querySelectorAll('.invalid-feedback');
+        errorElements.forEach(el => el.remove());
+        element.classList.remove('is-invalid');
+    }
+
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    }
 });
