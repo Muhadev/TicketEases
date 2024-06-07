@@ -1,7 +1,7 @@
 # Import necessary modules
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField, DateField, TimeField
-from wtforms.validators import DataRequired, Email, Length
+from wtforms.validators import DataRequired, Email, Length, ValidationError
 from .email_validation import is_valid
 from .models import User
 
@@ -12,21 +12,16 @@ class RegisterForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired(), Length(min=8)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), Length(min=8)])
 
-    def validate(self, extra_validators=None):
-        initial_validation = super(RegisterForm, self).validate()
-        if not initial_validation:
-            return False
-        if not is_valid(self.email.data):
-            self.email.errors.append("Email is invalid")
-            return False
-        user = User.query.filter_by(email=self.email.data).first()
+    def validate_email(self, field):
+        if not is_valid(field.data):
+            raise ValidationError("Email is invalid")
+        user = User.query.filter_by(email=field.data).first()
         if user:
-            self.email.errors.append("Email already registered")
-            return False
-        if self.password.data != self.confirm_password.data:
-            self.confirm_password.errors.append("Passwords must match")
-            return False
-        return True
+            raise ValidationError("Email already registered")
+    
+    def validate_confirm_password(self, field):
+        if self.password.data != field.data:
+            raise ValidationError("Passwords must match")
 
 
 class LoginForm(FlaskForm):

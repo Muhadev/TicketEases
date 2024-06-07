@@ -6,11 +6,13 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 from flask_mail import Mail, Message
 from .models import User
 from . import db, mail
-from .email import send_email
+from .email_utils import send_email
 from .forms import RegisterForm, LoginForm
 from .token_utils import generate_confirmation_token, confirm_token
 from datetime import datetime, timedelta
-from functools import wraps
+from .email_validation import is_valid
+from .role_require import role_required
+
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -21,16 +23,6 @@ mail = Mail()
 
 def create_response(message, status='success', code=200):
     return jsonify({'message': message, 'status': status}), code
-
-def role_required(role):
-    def decorator(f):
-        @wraps(f)
-        def decorated_function(*args, **kwargs):
-            if not current_user.is_authenticated or current_user.role != role:
-                return abort(403)  # Forbidden
-            return f(*args, **kwargs)
-        return decorated_function
-    return decorator
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -64,6 +56,11 @@ def register():
         email = form.email.data
         password = form.password.data
 
+        # Server-side email validation
+        if not is_valid(email):
+            flash('Invalid email address.', 'error')
+            return render_template('register.html', form=form)
+
         # Validate email and password format
         if not re.match(EMAIL_REGEX, email):
             flash('Invalid email format.', 'error')
@@ -78,13 +75,11 @@ def register():
             flash('Email address already exists.', 'error')
             return render_template('register.html', form=form)
 
+        
         # Create and add user to the database
         new_user = User(username=username, email=email, password=password, role='user', confirmed=False)
         db.session.add(new_user)
         db.session.commit()
-
-        # Print hashed password
-        print(f"Registered user {email} with hash {new_user.password_hash}")
 
         # Generate confirmation token and send confirmation email
         token = generate_confirmation_token(email)

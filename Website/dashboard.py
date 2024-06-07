@@ -6,12 +6,16 @@ from sqlalchemy.orm.exc import FlushError
 from flask_login import login_required, current_user
 import logging
 from .forms import EventForm
+from .payment import payment_app
 
 # Configure logging
 logging.basicConfig(filename='dashboard.log', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
+
+# Import payment routes
+dashboard_bp.register_blueprint(payment_app)
 
 @dashboard_bp.route('/')
 @login_required
@@ -25,29 +29,30 @@ def dashboard():
 @dashboard_bp.route('/events/create', methods=['GET', 'POST'])
 @login_required
 def create_event():
-    form = EventForm()  # Instantiate your EventForm
+    form = EventForm()
     
-    if form.validate_on_submit():  # Server-side validation using Flask-WTF
+    if form.validate_on_submit():
         title = form.title.data
         description = form.description.data
         date = form.date.data
         time = form.time.data
         venue = form.venue.data
+        amount = 5000  # Example amount in cents for creating an event
 
         try:
-            event = Event(title=title, description=description, date=date, time=time, venue=venue)
+            # Create a new event but don't commit yet
+            event = Event(title=title, description=description, date=date, time=time, venue=venue, organizer_id=current_user.id)
             db.session.add(event)
-            db.session.commit()
-            logger.info(f'Event created: {event.title}')
-            flash('Event created successfully!', 'success')
-            return jsonify({'event_id': event.id})
+            db.session.flush()  # Get the event ID without committing
+
+            # Redirect to payment page
+            return redirect(url_for('payment.charge', amount=amount, description=f"Creating Event: {title}", user_id=current_user.id, event_id=event.id))
         except Exception as e:
             db.session.rollback()
             logger.error(f'Error creating event: {str(e)}')
             flash('An error occurred while creating the event. Please try again later.', 'error')
             return redirect(url_for('dashboard.create_event'))
 
-    # If the request method is GET or form validation fails, render the template with the form
     return render_template('create_event.html', form=form)
 
 @dashboard_bp.route('/events/<int:event_id>/details')
@@ -121,20 +126,16 @@ def book_tickets():
         if ticket_type.available_tickets < quantity:
             return jsonify({'error': 'Not enough tickets available!'}), 400
 
-        tickets = []
-        for _ in range(quantity):
-            ticket = Ticket(user_id=current_user.id, event_id=event_id, ticket_type_id=ticket_type_id)
-            db.session.add(ticket)
-            ticket_type.available_tickets -= 1
-            tickets.append(ticket)
+        amount = ticket_type.price * quantity * 100  # Convert to cents
+        description = f"Booking {quantity} ticket(s) for event: {ticket_type.event.title}"
 
-        db.session.commit()
-        logger.info(f'Tickets booked for event {event_id} by user {current_user.id}')
-        return jsonify({'booking_id': tickets[0].id}), 200  # Return JSON with booking ID
+        # Redirect to payment page
+        return redirect(url_for('payment.charge', amount=amount, description=description, user_id=current_user.id, event_id=event_id))
     except Exception as e:
         db.session.rollback()
         logger.error(f'Error booking tickets: {str(e)}')
         return jsonify({'error': 'An error occurred while booking tickets. Please try again later.'}), 500
+
 
 @dashboard_bp.route('/booking/confirmation/<int:booking_id>')
 @login_required
