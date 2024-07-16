@@ -1,21 +1,16 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
-from .models import db, Event, User, Registration, TicketType, Ticket, Order, Payment
-from sqlalchemy.exc import SQLAlchemyError, IntegrityError
-from .token_utils import generate_confirmation_token  # Add this import statement
-from sqlalchemy.orm.exc import FlushError
+from .models import db, Event, TicketType, Ticket, Order, Payment
+from sqlalchemy.exc import SQLAlchemyError
 from flask_login import login_required, current_user
 import logging
 from .forms import EventForm
-from .payment import payment_app
+from .token_utils import generate_confirmation_token  # Add this import statement
 
 # Configure logging
 logging.basicConfig(filename='dashboard.log', level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 dashboard_bp = Blueprint('dashboard', __name__, url_prefix='/dashboard')
-
-# Import payment routes
-dashboard_bp.register_blueprint(payment_app)
 
 @dashboard_bp.route('/')
 @login_required
@@ -29,31 +24,27 @@ def dashboard():
 @dashboard_bp.route('/events/create', methods=['GET', 'POST'])
 @login_required
 def create_event():
-    form = EventForm()
-    
-    if form.validate_on_submit():
+    form = EventForm()  # Instantiate your EventForm
+
+    if form.validate_on_submit():  # Server-side validation using Flask-WTF
         title = form.title.data
         description = form.description.data
         date = form.date.data
         time = form.time.data
         venue = form.venue.data
-        amount = 5000  # Example amount in cents for creating an event
 
         try:
-            # Create a new event but don't commit yet
-            event = Event(title=title, description=description, date=date, time=time, venue=venue, organizer_id=current_user.id)
-            db.session.add(event)
-            db.session.flush()  # Get the event ID without committing
-
-            # Redirect to payment page
-            return redirect(url_for('payment.charge', amount=amount, description=f"Creating Event: {title}", user_id=current_user.id, event_id=event.id))
+            # Redirect to the payment page with event details
+            amount = 1000  # Amount in cents (set your own logic to determine amount)
+            currency = 'usd'
+            return redirect(url_for('payment.charge', amount=amount, currency=currency, description=description, event_name=title, event_date=date, venue=venue))
         except Exception as e:
             db.session.rollback()
-            logger.error(f'Error creating event: {str(e)}')
-            flash('An error occurred while creating the event. Please try again later.', 'error')
-            return redirect(url_for('dashboard.create_event'))
+            logger.error(f'Error preparing event creation: {str(e)}')
+            flash('An error occurred while preparing the event creation. Please try again later.', 'error')
 
     return render_template('create_event.html', form=form)
+
 
 @dashboard_bp.route('/events/<int:event_id>/details')
 @login_required
@@ -126,16 +117,16 @@ def book_tickets():
         if ticket_type.available_tickets < quantity:
             return jsonify({'error': 'Not enough tickets available!'}), 400
 
-        amount = ticket_type.price * quantity * 100  # Convert to cents
-        description = f"Booking {quantity} ticket(s) for event: {ticket_type.event.title}"
+        amount = quantity * ticket_type.price  # Total amount in cents
+        currency = 'usd'
+        description = f'Booking {quantity} tickets for {ticket_type.name}'
 
-        # Redirect to payment page
-        return redirect(url_for('payment.charge', amount=amount, description=description, user_id=current_user.id, event_id=event_id))
+        # Redirect to the payment page with booking details
+        return redirect(url_for('payment.charge', amount=amount, currency=currency, description=description, event_id=event_id, ticket_type_id=ticket_type_id, quantity=quantity))
     except Exception as e:
         db.session.rollback()
-        logger.error(f'Error booking tickets: {str(e)}')
-        return jsonify({'error': 'An error occurred while booking tickets. Please try again later.'}), 500
-
+        logger.error(f'Error preparing ticket booking: {str(e)}')
+        return jsonify({'error': 'An error occurred while preparing ticket booking. Please try again later.'}), 500
 
 @dashboard_bp.route('/booking/confirmation/<int:booking_id>')
 @login_required

@@ -29,6 +29,7 @@ def create_app():
         f"mysql://{os.getenv('DB_USERNAME')}:{os.getenv('DB_PASSWORD')}"
         f"@{os.getenv('DB_HOST')}/{os.getenv('DB_NAME')}"
     )
+    print(app.config['SQLALCHEMY_DATABASE_URI'])
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
     app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))

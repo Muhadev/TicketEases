@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment{% endblock %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 600px;
+        margin-top: 50px;
+    }
+    #card-element {
+        border: 1px solid #ced4da;
+        padding: .375rem .75rem;
+        border-radius: .25rem;
+    }
+    #card-errors {
+        color: #dc3545;
+        margin-top: .375rem;
+    }
+</style>
+<div class="container mt-5">
+    <h2 class="mb-4">Payment</h2>
+    <form action="{{ url_for('payment.charge') }}" method="POST" id="payment-form">
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" class="form-control" required value="{{ request.args.get('amount', '') }}">
+        </div>
+        <div class="form-group">
+            <label for="currency">Currency</label>
+            <input type="text" id="currency" name="currency" class="form-control" required value="{{ request.args.get('currency', 'usd') }}">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input type="text" id="description" name="description" class="form-control" required value="{{ request.args.get('description', '') }}">
+        </div>
+        <div class="form-group">
+            <label for="card-element">Card Details</label>
+            <div id="card-element" class="form-control">
+                <!-- A Stripe Element will be inserted here. -->
+            </div>
+            <!-- Used to display form errors. -->
+            <div id="card-errors" role="alert" class="text-danger mt-2"></div>
+        </div>
+        <input type="hidden" name="order_id" value="{{ request.args.get('order_id') }}">
+        <button type="submit" class="btn btn-primary">Submit Payment</button>
+    </form>
+</div>
+{% endblock %}
